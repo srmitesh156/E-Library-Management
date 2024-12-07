@@ -1,87 +1,122 @@
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+// import { Link } from "react-router-dom";
 
 const Booklist = () => {
-  const trendingBooks = [
-    { title: "Game of Thrones", status: "Borrow", image: "public/images/game-of-thrones.jpg" },
-    // { title: "I don't love you anymore", status: "Not in Library", image: "#" },
-    { title: "Twisted Lies", status: "Not in Library", image: "public/images/twisted-lies.jpg" },
-    { title: "How to Win Friends", status: "Checked Out", image: "public/images/how-to-win-friends.jpg" },
-    { title: "The Psychology of Money", status: "Not in Library", image: "public/images/the-psychology.png" },
-    { title: "Harry Potter", status: "Checked Out", image: "public/images/harry-Potter.jpg" },
-  ];
+  const [books, setBooks] = useState([]); 
+  const [filters, setFilters] = useState({
+    genre: "",
+    author: "",
+    publicationDate: "",
+  });
 
-//   const classicBooks = [
-//     { title: "Monsieur Monde Vanishes", status: "Borrow", image: "#" },
-//     { title: "Ben Jonson", status: "Read", image: "#" },
-//     { title: "Pebbles on the Shore", status: "Read", image: "#" },
-//     { title: "Della Discorso", status: "Read", image: "#" },
-//     { title: "The Up-bringing", status: "Read", image: "#" },
-//     { title: "Verses Translations", status: "Read", image: "#" },
-//   ];
+  const [filteredBooks, setFilteredBooks] = useState([]); 
+  useEffect(() => {
+    
+    axios
+      .get("http://localhost:3000/Book")
+      .then((response) => {
+        setBooks(response.data);
+        setFilteredBooks(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching books:", error);
+      });
+  }, []);
+
+  // Function to handle filter changes
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+
+    // Update filters
+    const newFilters = { ...filters, [name]: value };
+    setFilters(newFilters);
+
+    // Apply filters to books
+    const filtered = books.filter((book) => {
+      const matchesGenre =
+        newFilters.genre === "" ||
+        book.genre.toLowerCase().includes(newFilters.genre.toLowerCase());
+      const matchesAuthor =
+        newFilters.author === "" ||
+        book.author.toLowerCase().includes(newFilters.author.toLowerCase());
+      const matchesPublicationDate =
+        newFilters.publicationDate === "" ||
+        new Date(book.publicationDate)
+          .getFullYear()
+          .toString()
+          .includes(newFilters.publicationDate);
+
+      return matchesGenre && matchesAuthor && matchesPublicationDate;
+    });
+
+    setFilteredBooks(filtered);
+  };
 
   return (
-    <div className="bg-gray-100 py-8">
-      <div className="container mx-auto px-4">
-        {/* Trending Books Section */}
-        <section className="mb-12">
-          <h2 className="text-xl font-bold mb-4">Trending Books</h2>
-          <div className="flex overflow-x-auto space-x-4">
-            {trendingBooks.map((book, index) => (
-              <div
-                key={index}
-                className="bg-white shadow-md rounded-lg p-4 flex-none w-48"
-              >
-                <img
-                  src={book.image}
-                  alt={book.title}
-                  className="h-48 w-full object-cover rounded-md mb-4"
-                />
-                <h3 className="text-sm font-semibold mb-2">{book.title}</h3>
-                <button
-                  className={`w-full py-2 text-sm font-medium rounded-lg ${
-                    book.status === "Borrow"
-                      ? "bg-blue-500 text-white hover:bg-blue-600"
-                      : book.status === "Checked Out"
-                      ? "bg-gray-500 text-white"
-                      : "bg-gray-300 text-gray-700"
-                  }`}
-                >
-                  {book.status}
-                </button>
-              </div>
-            ))}
-          </div>
-        </section>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold text-center mb-6">E-Library Books</h1>
 
-        {/* Classic Books Section */}
-        {/* <section>
-          <h2 className="text-xl font-bold mb-4">Classic Books</h2>
-          <div className="flex overflow-x-auto space-x-4">
-            {classicBooks.map((book, index) => (
-              <div
-                key={index}
-                className="bg-white shadow-md rounded-lg p-4 flex-none w-48"
-              >
-                <img
-                  src={book.image}
-                  alt={book.title}
-                  className="h-48 w-full object-cover rounded-md mb-4"
-                />
-                <h3 className="text-sm font-semibold mb-2">{book.title}</h3>
-                <button
-                  className={`w-full py-2 text-sm font-medium rounded-lg ${
-                    book.status === "Borrow"
-                      ? "bg-blue-500 text-white hover:bg-blue-600"
-                      : "bg-green-500 text-white hover:bg-green-600"
-                  }`}
-                >
-                  {book.status}
-                </button>
-              </div>
-            ))}
-          </div>
-        </section> */}
+      
+      <div className="flex flex-wrap justify-center gap-4 mb-6">
+        <input
+          type="text"
+          name="genre"
+          placeholder="Filter by Genre"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={filters.genre}
+          onChange={handleFilterChange}
+        />
+        <input
+          type="text"
+          name="author"
+          placeholder="Filter by Author"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={filters.author}
+          onChange={handleFilterChange}
+        />
+        <input
+          type="text"
+          name="publicationDate"
+          placeholder="Filter by Year (e.g., 2023)"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={filters.publicationDate}
+          onChange={handleFilterChange}
+        />
       </div>
+
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredBooks.map((book) => (
+          <div
+            key={book.id}
+            className="border rounded-lg p-4 shadow hover:shadow-lg transition-shadow"
+          >
+            <img
+              src={book.image}
+              alt={book.title}
+              className="w-full h-48 object-cover mb-4"
+            />
+            <h2 className="text-lg font-semibold">{book.title}</h2>
+            <p className="text-gray-600">Author: {book.author}</p>
+            <p className="text-gray-600">Genre: {book.genre}</p>
+            <p className="text-gray-600">
+              Published: {new Date(book.publicationDate).toDateString()}
+            </p>
+            {/* <Link
+              to={`/book/${book.id}`} // Navigate to book details page
+              className="mt-4 inline-block text-blue-500 hover:underline"
+            >
+              View Details
+            </Link> */}
+          </div>
+        ))}
+      </div>
+
+     
+      {filteredBooks.length === 0 && (
+        <p className="text-center text-gray-500 mt-6">No books found!</p>
+      )}
     </div>
   );
 };

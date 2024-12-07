@@ -1,0 +1,38 @@
+{
+  "Book": [
+    {
+      "id": "7e5f",
+      "title": "demi",
+      "author": "fgdf",
+      "genre": "fgdg",
+      "publishedDate": "2024-12-24",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ99Dam-huZ8xdY9AnUeyz4i9-aVQ3sOSu_A&s"
+    },
+    {
+      "id": "181c",
+      "title": "sadsad",
+      "author": "sadsadsa",
+      "genre": "sadsad",
+      "publishedDate": "2025-01-01",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ99Dam-huZ8xdY9AnUeyz4i9-aVQ3sOSu_A&s",
+      "description": "fwefer"
+    },
+    {
+      "id": "e174",
+      "title": "wqerfwef",
+      "author": "fwefwe",
+      "genre": "werfwe",
+      "publishedDate": "2024-12-21",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ99Dam-huZ8xdY9AnUeyz4i9-aVQ3sOSu_A&s",
+      "description": "fgergyrgy"
+    },
+    {
+      "id": "a661",
+      "title": "fwef",
+      "author": "fgegerg",
+      "genre": "grger",
+      "publishedDate": "2024-12-11",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ99Dam-huZ8xdY9AnUeyz4i9-aVQ3sOSu_A&s"
+    }
+  ]
+}
